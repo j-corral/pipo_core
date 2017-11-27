@@ -34,8 +34,14 @@ M_CONF = [
 
 ]
 
+S_CONF = {
+    "pin_sig": 33,
+    "pin_trig": 31,
+    "pin_echo": 29
+}
 
-Pipo = Pipo.Pipo(M_CONF)
+
+Pipo = Pipo.Pipo(M_CONF, S_CONF)
 
 Pipo.forward()
 time.sleep(2)
