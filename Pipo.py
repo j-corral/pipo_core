@@ -33,8 +33,8 @@ class Pipo:
         else:
             raise RuntimeError("Motors are not configured !")
 
+        self.S_CONF = S_CONF
         if self.S_CONF is not None:
-            self.S_CONF = S_CONF
             self.__init_sensors()
         else:
             raise RuntimeError("Sensors are not configured !")
