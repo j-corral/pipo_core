@@ -11,14 +11,19 @@ class Pipo:
     S_CONF = None
     Sensors = None
 
-    FRONT_SPEED_RATE = 0
-    BACK_SPEED_RATE = 0
+    SPEED_RATE = 0
 
     SPEED_STEPS = 10
     SPEED_SLEEP = 0.25
 
     CURRENT_SPEED = 0
     TARGET_SPEED = 0
+
+    POS_STOP = "stop"
+    POS_FORWARD = "forward"
+    POS_BACKWARD = "backward"
+
+    CURRENT_POS = POS_STOP
 
     def __init__(self, M_CONF, S_CONF):
         self.M_CONF = M_CONF
@@ -47,16 +52,21 @@ class Pipo:
         )
 
     def forward(self):
+        self.CURRENT_POS = self.POS_BACKWARD
         for i,M in enumerate(self.Motors):
             (self.Motors[i]).forward()
-        self.__accelerate()
+        #self.__accelerate()
+        self.__adapt_speed()
 
     def backward(self):
+        self.CURRENT_POS = self.POS_FORWARD
         for i,M in enumerate(self.Motors):
             (self.Motors[i]).backward()
-        self.__accelerate()
+        #self.__accelerate()
+        self.__adapt_speed()
 
     def stop(self):
+        self.CURRENT_POS = self.POS_STOP
         for i,M in enumerate(self.Motors):
             (self.Motors[i]).stop()
 
@@ -69,7 +79,6 @@ class Pipo:
         # todo: conf right
 
     def __accelerate(self):
-
         speed = 0
         while speed < self.SPEED_STEPS:
             speed += 1
@@ -80,8 +89,14 @@ class Pipo:
             time.sleep(self.SPEED_SLEEP)
 
     def __adapt_speed(self):
-
         while 1:
             time.sleep(self.SPEED_SLEEP)
-            self.FRONT_SPEED_RATE = self.Sensors.get_speed_rate(1)
-            self.BACK_SPEED_RATE = self.Sensors.get_speed_rate(0)
+
+            if self.CURRENT_POS == self.POS_FORWARD:
+                self.SPEED_RATE = self.Sensors.get_speed_rate(1)
+            elif self.CURRENT_POS == self.POS_BACKWARD:
+                self.SPEED_RATE = self.Sensors.get_speed_rate(0)
+
+            for i, M in enumerate(self.Motors):
+                (self.Motors[i]).set_speed(self.SPEED_RATE)
+
