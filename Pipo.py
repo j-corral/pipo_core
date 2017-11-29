@@ -93,9 +93,9 @@ class Pipo:
             time.sleep(self.SPEED_SLEEP)
 
             if self.CURRENT_POS == self.POS_FORWARD:
-                self.SPEED_RATE = self.Sensors.get_speed_rate(1)
+                self.SPEED_RATE = self.Sensors.get_speed_rate(True)
             elif self.CURRENT_POS == self.POS_BACKWARD:
-                self.SPEED_RATE = self.Sensors.get_speed_rate(0)
+                self.SPEED_RATE = self.Sensors.get_speed_rate(False)
             else:
                 self.stop()
                 break

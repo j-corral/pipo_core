@@ -86,7 +86,9 @@ class Ultrasonic:
 
     def get_speed_rate(self, mode):
 
-        if mode:
+        print ("mode: " + str(mode))
+
+        if mode == True:
             distance = self.__front_distance()
         else:
             distance = self.__back_distance()
