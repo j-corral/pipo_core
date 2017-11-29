@@ -100,6 +100,10 @@ class Pipo:
                 self.stop()
                 break
 
+            if self.SPEED_RATE == 0 :
+                self.stop()
+                break
+
             for i, M in enumerate(self.Motors):
                 (self.Motors[i]).set_speed(self.SPEED_RATE)
 
