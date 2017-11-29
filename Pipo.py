@@ -96,6 +96,9 @@ class Pipo:
                 self.SPEED_RATE = self.Sensors.get_speed_rate(1)
             elif self.CURRENT_POS == self.POS_BACKWARD:
                 self.SPEED_RATE = self.Sensors.get_speed_rate(0)
+            else:
+                self.stop()
+                break
 
             for i, M in enumerate(self.Motors):
                 (self.Motors[i]).set_speed(self.SPEED_RATE)

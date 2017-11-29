@@ -87,6 +87,8 @@ class Ultrasonic:
         else:
             distance = self.__back_distance()
 
+        print ("distance: " + str(distance))
+
         if distance <= self.MIN_DIST:
             return 0
         elif distance <= self.QUART_DIST:
@@ -97,3 +99,5 @@ class Ultrasonic:
             return 7.5
         elif distance >= self.MAX_DIST:
             return 10
+        else:
+            return 0
