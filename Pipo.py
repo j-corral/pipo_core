@@ -90,12 +90,14 @@ class Pipo:
 
     def __adapt_speed(self):
         while 1:
-            time.sleep(self.SPEED_SLEEP)
+            #time.sleep(self.SPEED_SLEEP)
 
             if self.CURRENT_POS == self.POS_FORWARD:
                 self.SPEED_RATE = self.Sensors.get_speed_rate(True)
             elif self.CURRENT_POS == self.POS_BACKWARD:
                 self.SPEED_RATE = self.Sensors.get_speed_rate(False)
+
+            time.sleep(self.SPEED_SLEEP)
 
             if self.SPEED_RATE == 0:
                 self.stop()

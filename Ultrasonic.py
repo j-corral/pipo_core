@@ -5,7 +5,7 @@ import time
 
 class Ultrasonic:
 
-    SLEEP_INIT = 0.5
+    SLEEP_INIT = 0.25
     SLEEP_TRIG = 0.00001
     GPIO_SIG = None
 
