@@ -5,7 +5,7 @@ import time
 
 class Ultrasonic:
 
-    SLEEP_INIT = 0.25
+    SLEEP_INIT = 0.5
     SLEEP_TRIG = 0.00001
     GPIO_SIG = None
 
@@ -47,6 +47,8 @@ class Ultrasonic:
         distance = elapsed * 34000
         distance = distance / 2
 
+        print ("front: " + str(distance))
+
         return round(distance)
 
     def __back_distance(self):
@@ -77,6 +79,8 @@ class Ultrasonic:
         elapsed = stop - start
         distance = elapsed * 34000
         distance = distance / 2
+
+        print ("back: " + str(distance))
 
         return round(distance)
 
