@@ -12,8 +12,8 @@ class Ultrasonic:
     GPIO_TRIGGER = None
     GPIO_ECHO = None
 
-    MIN_DIST = 5
-    QUART_DIST = 20
+    MIN_DIST = 10
+    QUART_DIST = 30
     MID_DIST = 50
     FAR_DIST = 75
     MAX_DIST = 100
@@ -106,4 +106,4 @@ class Ultrasonic:
         elif distance >= self.MAX_DIST:
             return 10
         else:
-            return 0
+            return 1

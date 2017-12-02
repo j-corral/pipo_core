@@ -9,10 +9,10 @@ class Motor:
     pwm = None
     forward_conf = []
     backward_conf = []
-    PWM_FREQ = 440
+    PWM_FREQ = 120
     PWM_COEFF = 1000
-    MIN_PWM = 15
-    MAX_PWM = 100
+    MIN_PWM = 10
+    MAX_PWM = 70
 
     def __init__(self, name, pins, pwm_pin, forward, backward):
         GPIO.setmode(GPIO.BOARD)
@@ -51,12 +51,15 @@ class Motor:
         self.pwm.start(self.MIN_PWM)
 
     def set_speed(self, i):
-        speed = (self.PWM_COEFF * i) / self.MAX_PWM
 
-        if speed > self.MAX_PWM:
-            speed = self.MAX_PWM
-        elif speed < self.MIN_PWM:
-            speed = self.MIN_PWM
+        if self.name == "M1":
+            
+             speed = (self.PWM_COEFF * i) / self.MAX_PWM
 
-        print (self.name + " - speed:" + str(speed))
-        self.pwm.ChangeDutyCycle(speed)
+             if speed > self.MAX_PWM:
+                speed = self.MAX_PWM
+             elif speed < self.MIN_PWM:
+                speed = self.MIN_PWM
+
+                print (self.name + " - speed:" + str(speed))
+             self.pwm.ChangeDutyCycle(speed)

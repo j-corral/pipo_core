@@ -42,10 +42,12 @@ S_CONF = {
 
 
 Pipo = Pipo.Pipo(M_CONF, S_CONF)
-time.sleep(1)
+time.sleep(5)
+#Pipo.backward()
+#time.sleep(10)
 Pipo.forward()
-#time.sleep(2)
-#Pipo.stop()
+time.sleep(5)
+Pipo.stop()
 
 #Pipo.backward()
 #time.sleep(2)

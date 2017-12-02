@@ -11,7 +11,7 @@ class Pipo:
     S_CONF = None
     Sensors = None
 
-    SPEED_RATE = 0
+    SPEED_RATE = 1
 
     SPEED_STEPS = 10
     SPEED_SLEEP = 0.25
@@ -97,7 +97,9 @@ class Pipo:
             elif self.CURRENT_POS == self.POS_BACKWARD:
                 self.SPEED_RATE = self.Sensors.get_speed_rate(False)
 
+
             if self.SPEED_RATE == 0:
+                print("Stop pipo: " + str(self.SPEED_RATE))
                 self.stop()
                 break
 
