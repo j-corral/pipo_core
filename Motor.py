@@ -52,7 +52,7 @@ class Motor:
 
     def set_speed(self, i):
 
-        if self.name == "M1":
+        if self.name != "M5":
             
              speed = (self.PWM_COEFF * i) / self.MAX_PWM
 
