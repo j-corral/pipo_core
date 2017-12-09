@@ -12,7 +12,7 @@ class Ultrasonic:
     GPIO_TRIGGER = None
     GPIO_ECHO = None
 
-    MIN_DIST = 10
+    MIN_DIST = 5
     QUART_DIST = 30
     MID_DIST = 50
     FAR_DIST = 75
