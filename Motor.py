@@ -12,7 +12,7 @@ class Motor:
     PWM_FREQ = 120
     PWM_COEFF = 1000
     MIN_PWM = 10
-    MAX_PWM = 70
+    MAX_PWM = 99
 
     def __init__(self, name, pins, pwm_pin, forward, backward):
         GPIO.setmode(GPIO.BOARD)
