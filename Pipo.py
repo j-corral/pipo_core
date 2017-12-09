@@ -14,7 +14,7 @@ class Pipo:
     SPEED_RATE = 1
 
     SPEED_STEPS = 10
-    SPEED_SLEEP = 0.25
+    SPEED_SLEEP = 0.2
 
     CURRENT_SPEED = 0
     TARGET_SPEED = 0
@@ -99,10 +99,10 @@ class Pipo:
             else:
                 break
 
+            self.SPEED_RATE = self.SPEED_RATE + 1;
+
             if self.SPEED_RATE > self.TARGET_SPEED:
                 self.SPEED_RATE = self.TARGET_SPEED
-            else:
-                self.SPEED_RATE = self.SPEED_RATE + 1;
 
             print("Speed: " + str(self.SPEED_RATE))
 
