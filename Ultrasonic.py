@@ -12,11 +12,9 @@ class Ultrasonic:
     GPIO_TRIGGER = None
     GPIO_ECHO = None
 
-    MIN_DIST = 10
-    QUART_DIST = 30
-    MID_DIST = 50
-    FAR_DIST = 75
+    MIN_DIST = 5
     MAX_DIST = 100
+    COEFF_DIST = 10
 
     def __init__(self, GPIO_SIG, GPIO_TRIGGER, GPIO_ECHO):
         GPIO.setmode(GPIO.BOARD)
@@ -97,13 +95,7 @@ class Ultrasonic:
 
         if distance <= self.MIN_DIST:
             return 0
-        elif distance <= self.QUART_DIST:
-            return 2.5
-        elif distance <= self.MID_DIST:
-            return 5
-        elif distance <= self.FAR_DIST:
-            return 7.5
         elif distance >= self.MAX_DIST:
-            return 10
+            return 1 * self.COEFF_DIST
         else:
-            return 1
+            return abs(round(distance / self.MAX_DIST)) * self.COEFF_DIST
