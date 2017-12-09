@@ -12,7 +12,7 @@ class Ultrasonic:
     GPIO_TRIGGER = None
     GPIO_ECHO = None
 
-    MIN_DIST = 5
+    MIN_DIST = 4
     MAX_DIST = 100
     COEFF_DIST = 10
 
@@ -96,6 +96,7 @@ class Ultrasonic:
         if distance <= self.MIN_DIST:
             return 0
         elif distance >= self.MAX_DIST:
-            return 1 * self.COEFF_DIST
+            return abs(1 * self.COEFF_DIST)
         else:
-            return abs(round(distance / self.MAX_DIST)) * self.COEFF_DIST
+            #print("calc: " + str(distance) + "/" + str(self.MAX_DIST) + "*" + str(self.COEFF_DIST))
+            return abs(1 + (round(distance) / self.MAX_DIST) * self.COEFF_DIST)
