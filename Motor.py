@@ -39,6 +39,8 @@ class Motor:
     def backward(self):
         for pin, value in zip(self.pins, self.backward_conf):
             print (self.name + " [BW] - enable pin : " + str(pin))
+            if pin == self.pwm_pin:
+                self.__init_pwm()
             GPIO.output(pin, value)
 
     def stop(self):

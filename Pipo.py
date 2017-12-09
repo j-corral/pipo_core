@@ -55,14 +55,12 @@ class Pipo:
         self.CURRENT_POS = self.POS_FORWARD
         for i,M in enumerate(self.Motors):
             (self.Motors[i]).forward()
-        #self.__accelerate()
         self.__adapt_speed()
 
     def backward(self):
         self.CURRENT_POS = self.POS_BACKWARD
         for i,M in enumerate(self.Motors):
             (self.Motors[i]).backward()
-        #self.__accelerate()
         self.__adapt_speed()
 
     def stop(self):
