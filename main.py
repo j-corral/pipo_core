@@ -46,7 +46,7 @@ time.sleep(2)
 #Pipo.backward()
 #time.sleep(10)
 Pipo.forward()
-#time.sleep(5)
+#time.sleep(20)
 #Pipo.stop()
 
 #Pipo.backward()

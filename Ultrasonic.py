@@ -12,7 +12,7 @@ class Ultrasonic:
     GPIO_TRIGGER = None
     GPIO_ECHO = None
 
-    MIN_DIST = 4
+    MIN_DIST = 1
     MAX_DIST = 100
     COEFF_DIST = 10
 
@@ -23,6 +23,7 @@ class Ultrasonic:
         self.GPIO_ECHO = GPIO_ECHO
 
     def __front_distance(self):
+        self.MIN_DIST = 1
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.GPIO_SIG, GPIO.OUT)
         GPIO.output(self.GPIO_SIG, 0)
@@ -50,7 +51,7 @@ class Ultrasonic:
         return round(distance)
 
     def __back_distance(self):
-
+        self.MIN_DIST = 2
         # use pin numbers
         GPIO.setmode(GPIO.BOARD)
 

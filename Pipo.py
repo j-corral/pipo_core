@@ -14,7 +14,7 @@ class Pipo:
     SPEED_RATE = 1
 
     SPEED_STEPS = 10
-    SPEED_SLEEP = 0.2
+    SPEED_SLEEP = 0.1
 
     CURRENT_SPEED = 0
     TARGET_SPEED = 0
@@ -103,11 +103,21 @@ class Pipo:
                 self.SPEED_RATE = self.TARGET_SPEED
 
             print("Speed: " + str(self.SPEED_RATE))
-
-            if self.SPEED_RATE == 0:
+            
+            if self.TARGET_SPEED == 0:
                 print("Stop pipo: " + str(self.SPEED_RATE))
                 self.stop()
                 break
+
+            if self.TARGET_SPEED <= 2:
+                self.TARGET_SPEED = 0;
+                self.SPEED_RATE = 0;
+                if self.CURRENT_POS == self.POS_FORWARD:
+                    print("go backward")
+                    self.backward()
+                else:
+                    print("go forward")
+                    self.forward()
 
             for i, M in enumerate(self.Motors):
                 (self.Motors[i]).set_speed(self.SPEED_RATE)
