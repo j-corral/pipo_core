@@ -99,6 +99,8 @@ class Pipo:
             else:
                 break
 
+            print("Speed: " + str(self.SPEED_RATE))
+
             if self.SPEED_RATE == 0:
                 print("Stop pipo: " + str(self.SPEED_RATE))
                 self.stop()
