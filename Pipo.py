@@ -81,8 +81,14 @@ class Pipo:
         self.DISABLED = -1
 
     def right(self):
-        self.stop()
-        # todo: conf right
+        self.DISABLED = 4
+
+        if self.CURRENT_POS == self.POS_BACKWARD:
+            self.DISABLED = 1
+
+        (self.Motors[self.DISABLED]).set_speed(0)
+        time.sleep(2)
+        self.DISABLED = -1
 
     def __accelerate(self):
         speed = 0
@@ -118,16 +124,18 @@ class Pipo:
                 break
 
             if self.TARGET_SPEED <= 2:
+                print("turn left")
+                self.left()
+                """"
                 self.TARGET_SPEED = 0;
                 self.SPEED_RATE = 0;
                 if self.CURRENT_POS == self.POS_FORWARD:
                     print("go backward")
                     self.backward()
-                    print("turn left")
-                    self.left()
                 else:
                     print("go forward")
                     self.forward()
+                """
 
             for i, M in enumerate(self.Motors):
                 if(i != self.DISABLED):
