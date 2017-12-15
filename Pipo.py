@@ -69,7 +69,13 @@ class Pipo:
             (self.Motors[i]).stop()
 
     def left(self):
-        self.stop()
+        i = 2
+
+        if self.CURRENT_POS == self.POS_BACKWARD:
+            i = 0
+
+        (self.Motors[i]).set_speed(0)
+        time.sleep(1)
         # todo: conf left
 
     def right(self):
@@ -113,8 +119,10 @@ class Pipo:
                 self.TARGET_SPEED = 0;
                 self.SPEED_RATE = 0;
                 if self.CURRENT_POS == self.POS_FORWARD:
-                    print("go backward")
-                    self.backward()
+                    print("turn left")
+                    self.left()
+                    #print("go backward")
+                    #self.backward()
                 else:
                     print("go forward")
                     self.forward()
