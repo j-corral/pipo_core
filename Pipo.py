@@ -76,8 +76,13 @@ class Pipo:
         if self.CURRENT_POS == self.POS_BACKWARD:
             self.DISABLED = 0
 
-        (self.Motors[self.DISABLED]).set_speed(0)
-        time.sleep(2)
+        for i, M in enumerate(self.Motors):
+            if i == self.DISABLED:
+                (self.Motors[i]).set_speed(0)
+            else:
+                (self.Motors[i]).set_speed(5)
+
+        time.sleep(1)
         self.DISABLED = -1
 
     def right(self):
@@ -86,8 +91,13 @@ class Pipo:
         if self.CURRENT_POS == self.POS_BACKWARD:
             self.DISABLED = 1
 
-        (self.Motors[self.DISABLED]).set_speed(0)
-        time.sleep(2)
+        for i, M in enumerate(self.Motors):
+            if i == self.DISABLED:
+                (self.Motors[i]).set_speed(0)
+            else:
+                (self.Motors[i]).set_speed(5)
+
+        time.sleep(1)
         self.DISABLED = -1
 
     def __accelerate(self):
