@@ -25,6 +25,8 @@ class Pipo:
 
     CURRENT_POS = POS_STOP
 
+    DISABLED = -1
+
     def __init__(self, M_CONF, S_CONF):
         self.M_CONF = M_CONF
 
@@ -69,13 +71,13 @@ class Pipo:
             (self.Motors[i]).stop()
 
     def left(self):
-        i = 2
+        self.DISABLED = 2
 
         if self.CURRENT_POS == self.POS_BACKWARD:
-            i = 0
+            self.DISABLED = 0
 
-        (self.Motors[i]).set_speed(0)
-        time.sleep(1)
+        (self.Motors[self.DISABLED]).set_speed(0)
+        time.sleep(2)
         # todo: conf left
 
     def right(self):
@@ -128,5 +130,6 @@ class Pipo:
                     self.forward()
 
             for i, M in enumerate(self.Motors):
-                (self.Motors[i]).set_speed(self.SPEED_RATE)
+                if(i != self.DISABLED):
+                    (self.Motors[i]).set_speed(self.SPEED_RATE)
 
