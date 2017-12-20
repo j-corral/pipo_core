@@ -73,30 +73,36 @@ class ClientThread(threading.Thread):
         print("Client déconnecté...")
 
     def execute(self, response):
-        print response
+        print (response)
 
         if response == CMD_FWD:
             msg = "Executing forward..."
+            print(msg)
             self.clientsocket.send(msg)
             self.pipo.forward()
         elif response == CMD_BWD:
             msg = "Executing backward..."
+            print(msg)
             self.clientsocket.send(msg)
             self.pipo.backward()
         elif response == CMD_LEFT:
             msg = "Executing left..."
+            print(msg)
             self.clientsocket.send(msg)
             self.pipo.left()
         elif response == CMD_RIGHT :
             msg = "Executing right..."
+            print(msg)
             self.clientsocket.send(msg)
             self.pipo.right()
         elif response == CMD_STOP :
             msg = "Executing stop..."
+            print(msg)
             self.clientsocket.send(msg)
             self.pipo.stop()
         else:
             msg = "command not found !"
+            print(msg)
             self.clientsocket.send(msg)
 
 
