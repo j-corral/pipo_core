@@ -73,7 +73,8 @@ class ClientThread(threading.Thread):
         print("Client déconnecté...")
 
     def execute(self, response):
-        print (response)
+        response = response.strip()
+        print ("Received: " + response)
 
         if response == CMD_FWD:
             msg = "Executing forward..."
@@ -90,12 +91,12 @@ class ClientThread(threading.Thread):
             print(msg)
             self.clientsocket.send(msg)
             self.pipo.left()
-        elif response == CMD_RIGHT :
+        elif response == CMD_RIGHT:
             msg = "Executing right..."
             print(msg)
             self.clientsocket.send(msg)
             self.pipo.right()
-        elif response == CMD_STOP :
+        elif response == CMD_STOP:
             msg = "Executing stop..."
             print(msg)
             self.clientsocket.send(msg)
