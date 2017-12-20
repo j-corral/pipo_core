@@ -137,7 +137,7 @@ tcpsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 tcpsock.bind(("", PORT))
 
 while True:
-    tcpsock.listen(100)
+    tcpsock.listen(1)
     print("En écoute...")
     (clientsocket, (ip, port)) = tcpsock.accept()
     newthread = ClientThread(ip, port, clientsocket)
