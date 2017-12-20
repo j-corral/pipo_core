@@ -5,7 +5,7 @@ import time
 import threading
 
 
-class Pipo(threading.Thread):
+class Pipo():
     M_CONF = None
     Motors = [Motor] * 4
 
@@ -29,9 +29,6 @@ class Pipo(threading.Thread):
     DISABLED = -1
 
     def __init__(self, M_CONF, S_CONF):
-
-        super(Pipo, self).__init__()
-        self._stop_event = threading.Event()
 
         self.M_CONF = M_CONF
 
@@ -62,22 +59,22 @@ class Pipo(threading.Thread):
         self.CURRENT_POS = self.POS_FORWARD
         for i,M in enumerate(self.Motors):
             (self.Motors[i]).forward()
-        self.__adapt_speed()
+        #self.__adapt_speed()
+        fw = threading.Thread(name='forward', target=self.__adapt_speed())
+        fw.start()
 
     def backward(self):
         self.CURRENT_POS = self.POS_BACKWARD
         for i,M in enumerate(self.Motors):
             (self.Motors[i]).backward()
-        self.__adapt_speed()
+        # self.__adapt_speed()
+        bw = threading.Thread(name='backward', target=self.__adapt_speed())
+        bw.start()
 
     def stop(self):
-        self._stop_event.set()
         self.CURRENT_POS = self.POS_STOP
         for i,M in enumerate(self.Motors):
             (self.Motors[i]).stop()
-
-    def __stopped(self):
-        return self._stop_event.is_set()
 
     def left(self):
         self.DISABLED = 3
@@ -123,11 +120,6 @@ class Pipo(threading.Thread):
         while 1:
             time.sleep(self.SPEED_SLEEP)
 
-            if self.__stopped():
-                print("Thread: Event STOP")
-                self.stop()
-                break
-
             if self.CURRENT_POS == self.POS_FORWARD:
                 self.TARGET_SPEED = self.Sensors.get_speed_rate(True)
             elif self.CURRENT_POS == self.POS_BACKWARD:
@@ -142,12 +134,11 @@ class Pipo(threading.Thread):
 
             print("Speed: " + str(self.SPEED_RATE))
             
-            if self.TARGET_SPEED == 0:
+            if self.TARGET_SPEED < 1:
                 print("Stop pipo: " + str(self.SPEED_RATE))
                 self.stop()
                 break
-
-            if self.TARGET_SPEED <= 2:
+            elif self.TARGET_SPEED > 100:
                 print("turn left")
                 self.left()
                 """"
