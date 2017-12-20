@@ -65,7 +65,7 @@ class ClientThread(threading.Thread):
     def run(self):
         print("Connection de %s %s" % (self.ip, self.port,))
 
-        response = self.clientsocket.recv(2048)
+        response = self.clientsocket.recv(2048).decode(encoding='utf_8', errors='strict')
 
         if response != "":
             self.execute(response)
@@ -74,37 +74,40 @@ class ClientThread(threading.Thread):
 
     def execute(self, response):
         response = response.strip()
-        print ("Received: " + response)
+        print ("Received: " + str(response))
 
         if response == CMD_FWD:
             msg = "Executing forward..."
             print(msg)
-            self.clientsocket.send(msg)
+            self.send(msg)
             self.pipo.forward()
         elif response == CMD_BWD:
             msg = "Executing backward..."
             print(msg)
-            self.clientsocket.send(msg)
+            self.send(msg)
             self.pipo.backward()
         elif response == CMD_LEFT:
             msg = "Executing left..."
             print(msg)
-            self.clientsocket.send(msg)
+            self.send(msg)
             self.pipo.left()
         elif response == CMD_RIGHT:
             msg = "Executing right..."
             print(msg)
-            self.clientsocket.send(msg)
+            self.send(msg)
             self.pipo.right()
         elif response == CMD_STOP:
             msg = "Executing stop..."
             print(msg)
-            self.clientsocket.send(msg)
+            self.send(msg)
             self.pipo.stop()
         else:
             msg = "command not found !"
             print(msg)
-            self.clientsocket.send(msg)
+            self.send(msg)
+
+    def send(self, msg):
+        self.clientsocket.send(msg.encode(encoding='utf_8', errors='strict'))
 
 
 tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
