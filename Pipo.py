@@ -2,7 +2,6 @@
 import Motor
 import Ultrasonic
 import time
-import threading
 
 
 class Pipo():
@@ -14,8 +13,8 @@ class Pipo():
 
     SPEED_RATE = 1
 
-    SPEED_STEPS = 10
-    SPEED_SLEEP = 0.1
+    SPEED_STEPS = 15
+    SPEED_SLEEP = 0.2
 
     CURRENT_SPEED = 0
     TARGET_SPEED = 0
@@ -26,7 +25,7 @@ class Pipo():
 
     CURRENT_POS = POS_STOP
 
-    DISABLED = -1
+    DISABLED = []
 
     def __init__(self, M_CONF, S_CONF):
 
@@ -44,8 +43,8 @@ class Pipo():
             raise RuntimeError("Sensors are not configured !")
 
     def __init_motors(self):
-        print("Pipo: init motors..." )
-        for i,M in enumerate(self.M_CONF):
+        print("Pipo: init motors...")
+        for i, M in enumerate(self.M_CONF):
             self.Motors[i] = Motor.Motor(M["name"], M["pins"], M["pwm_pin"], M["forward"], M["backward"])
 
     def __init_sensors(self):
@@ -55,56 +54,61 @@ class Pipo():
             self.S_CONF["pin_echo"],
         )
 
-    def forward(self):
+    def forward(self, auto=0):
+        print("Pipo forward")
         self.CURRENT_POS = self.POS_FORWARD
-        for i,M in enumerate(self.Motors):
+        for i, M in enumerate(self.Motors):
             (self.Motors[i]).forward()
-        #self.__adapt_speed()
-        fw = threading.Thread(name='forward', target=self.__adapt_speed())
-        fw.start()
+        if int(auto) > 0:
+            print ("Auto drive: Enabled")
+            self.__adapt_speed()
+        else:
+            print ("Auto drive: Disabled")
+            self.__accelerate()
 
-    def backward(self):
+    def backward(self, auto=0):
+        print("Pipo backward")
         self.CURRENT_POS = self.POS_BACKWARD
-        for i,M in enumerate(self.Motors):
+        for i, M in enumerate(self.Motors):
             (self.Motors[i]).backward()
-        # self.__adapt_speed()
-        bw = threading.Thread(name='backward', target=self.__adapt_speed())
-        bw.start()
+        if int(auto) > 0:
+            print ("Auto drive: Enabled")
+            self.__adapt_speed()
+        else:
+            print ("Auto drive: Disabled")
+            self.__accelerate()
 
     def stop(self):
         self.CURRENT_POS = self.POS_STOP
-        for i,M in enumerate(self.Motors):
+        for i, M in enumerate(self.Motors):
             (self.Motors[i]).stop()
 
     def left(self):
-        self.DISABLED = 3
+
+        self.DISABLED = [1, 3]
 
         if self.CURRENT_POS == self.POS_BACKWARD:
-            self.DISABLED = 0
+            self.DISABLED = [0, 2]
 
         for i, M in enumerate(self.Motors):
-            if i == self.DISABLED:
+            if i in self.DISABLED:
                 (self.Motors[i]).set_speed(0)
-            else:
-                (self.Motors[i]).set_speed(5)
 
         time.sleep(1)
-        self.DISABLED = -1
+        self.DISABLED = []
 
     def right(self):
-        self.DISABLED = 4
+        self.DISABLED = [0, 2]
 
         if self.CURRENT_POS == self.POS_BACKWARD:
-            self.DISABLED = 1
+            self.DISABLED = [1, 4]
 
         for i, M in enumerate(self.Motors):
-            if i == self.DISABLED:
+            if i in self.DISABLED:
                 (self.Motors[i]).set_speed(0)
-            else:
-                (self.Motors[i]).set_speed(5)
 
         time.sleep(1)
-        self.DISABLED = -1
+        self.DISABLED = []
 
     def __accelerate(self):
         speed = 0
@@ -133,26 +137,26 @@ class Pipo():
                 self.SPEED_RATE = self.TARGET_SPEED
 
             print("Speed: " + str(self.SPEED_RATE))
-            
-            if self.TARGET_SPEED < 1:
+
+            if self.TARGET_SPEED < 2:
                 print("Stop pipo: " + str(self.SPEED_RATE))
                 self.stop()
                 break
-            elif self.TARGET_SPEED > 100:
-                print("turn left")
-                self.left()
-                """"
-                self.TARGET_SPEED = 0;
-                self.SPEED_RATE = 0;
-                if self.CURRENT_POS == self.POS_FORWARD:
-                    print("go backward")
-                    self.backward()
-                else:
-                    print("go forward")
-                    self.forward()
-                """
+            #elif self.TARGET_SPEED <= 4:
+            #    print("turn left")
+            #    self.left()
+            #    """"
+            #    self.TARGET_SPEED = 0;
+            #    self.SPEED_RATE = 0;
+            #    if self.CURRENT_POS == self.POS_FORWARD:
+            #        print("go backward")
+            #        self.backward()
+            #    else:
+            #        print("go forward")
+            #        self.forward()
+            #    """
 
             for i, M in enumerate(self.Motors):
-                if(i != self.DISABLED):
+                if i not in self.DISABLED:
                     (self.Motors[i]).set_speed(self.SPEED_RATE)
 
