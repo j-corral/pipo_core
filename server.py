@@ -5,6 +5,7 @@ import Pipo
 import socket
 import threading
 
+
 PORT = 9696
 
 M_CONF = [
@@ -65,42 +66,63 @@ class ClientThread(threading.Thread):
     def run(self):
         print("Connection de %s %s" % (self.ip, self.port,))
 
-        response = self.clientsocket.recv(2048).decode(encoding='utf_8', errors='strict')
+        while True:
+            response = self.clientsocket.recv(2048).decode(encoding='utf_8', errors='strict')
 
-        if response != "":
-            self.execute(response)
+            if response != "":
+                self.execute(response)
+            else:
+                print ("No response received.")
 
-        print("Client déconnecté...")
+            print("Client déconnecté...")
 
     def execute(self, response):
         response = response.strip()
-        print ("Received: " + str(response))
 
-        if response == CMD_FWD:
-            msg = "Executing forward..."
+        args = response.split(",")
+
+        action = args[0]
+
+        del args[0]
+
+        print ("Action: " + str(action))
+        print ("Args: " + str(args))
+
+        if action == CMD_FWD:
+            msg = "Executing action: " + str(action) + "..."
             print(msg)
             self.send(msg)
-            self.pipo.forward()
-        elif response == CMD_BWD:
-            msg = "Executing backward..."
+            th = threading.Thread(target=self.pipo.forward, args=args)
+            th.daemon = True
+            th.start()
+        elif action == CMD_BWD:
+            msg = "Executing action: " + str(action) + "..."
             print(msg)
             self.send(msg)
-            self.pipo.backward()
-        elif response == CMD_LEFT:
-            msg = "Executing left..."
+            th = threading.Thread(target=self.pipo.backward, args=args)
+            th.daemon = True
+            th.start()
+        elif action == CMD_LEFT:
+            msg = "Executing action: " + str(action) + "..."
             print(msg)
             self.send(msg)
-            self.pipo.left()
-        elif response == CMD_RIGHT:
-            msg = "Executing right..."
+            th = threading.Thread(target=self.pipo.left, args=())
+            th.daemon = True
+            th.start()
+        elif action == CMD_RIGHT:
+            msg = "Executing action: " + str(action) + "..."
             print(msg)
             self.send(msg)
-            self.pipo.right()
-        elif response == CMD_STOP:
-            msg = "Executing stop..."
+            fw = threading.Thread(target=self.pipo.right, args=())
+            fw.daemon = True
+            fw.start()
+        elif action == CMD_STOP:
+            msg = "Executing action: " + str(action) + "..."
             print(msg)
             self.send(msg)
-            self.pipo.stop()
+            th = threading.Thread(target=self.pipo.stop, args=())
+            th.daemon = True
+            th.start()
         else:
             msg = "command not found !"
             print(msg)
@@ -115,7 +137,7 @@ tcpsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 tcpsock.bind(("", PORT))
 
 while True:
-    tcpsock.listen(10)
+    tcpsock.listen(100)
     print("En écoute...")
     (clientsocket, (ip, port)) = tcpsock.accept()
     newthread = ClientThread(ip, port, clientsocket)
