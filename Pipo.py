@@ -2,9 +2,10 @@
 import Motor
 import Ultrasonic
 import time
+import threading
 
 
-class Pipo:
+class Pipo(threading.Thread):
     M_CONF = None
     Motors = [Motor] * 4
 
@@ -28,6 +29,10 @@ class Pipo:
     DISABLED = -1
 
     def __init__(self, M_CONF, S_CONF):
+
+        super(Pipo, self).__init__()
+        self._stop_event = threading.Event()
+
         self.M_CONF = M_CONF
 
         if self.M_CONF is not None:
@@ -66,9 +71,13 @@ class Pipo:
         self.__adapt_speed()
 
     def stop(self):
+        self._stop_event.set()
         self.CURRENT_POS = self.POS_STOP
         for i,M in enumerate(self.Motors):
             (self.Motors[i]).stop()
+
+    def __stopped(self):
+        return self._stop_event.is_set()
 
     def left(self):
         self.DISABLED = 3
@@ -113,6 +122,11 @@ class Pipo:
     def __adapt_speed(self):
         while 1:
             time.sleep(self.SPEED_SLEEP)
+
+            if self.__stopped():
+                print("Thread: Event STOP")
+                self.stop()
+                break
 
             if self.CURRENT_POS == self.POS_FORWARD:
                 self.TARGET_SPEED = self.Sensors.get_speed_rate(True)
