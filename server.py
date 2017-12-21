@@ -71,10 +71,8 @@ class ClientThread(threading.Thread):
 
             if response != "":
                 self.execute(response)
-            else:
-                print ("No response received.")
 
-            print("Client déconnecté...")
+        print("Client déconnecté...")
 
     def execute(self, response):
         response = response.strip()
@@ -137,7 +135,7 @@ tcpsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 tcpsock.bind(("", PORT))
 
 while True:
-    tcpsock.listen(1)
+    tcpsock.listen(2)
     print("En écoute...")
     (clientsocket, (ip, port)) = tcpsock.accept()
     newthread = ClientThread(ip, port, clientsocket)
