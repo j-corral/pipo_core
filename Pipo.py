@@ -14,7 +14,7 @@ class Pipo():
     SPEED_RATE = 1
 
     SPEED_STEPS = 15
-    SPEED_SLEEP = 0.2
+    SPEED_SLEEP = 0.1
 
     CURRENT_SPEED = 0
     TARGET_SPEED = 0
