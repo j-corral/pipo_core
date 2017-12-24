@@ -13,7 +13,7 @@ class Pipo():
 
     SPEED_RATE = 1
 
-    SPEED_STEPS = 15
+    SPEED_STEPS = 50
     SPEED_SLEEP = 0.1
 
     CURRENT_SPEED = 0
@@ -92,7 +92,9 @@ class Pipo():
 
         for i, M in enumerate(self.Motors):
             if i in self.DISABLED:
-                (self.Motors[i]).set_speed(0)
+                (self.Motors[i]).backward()
+            else:
+                (self.Motors[i]).forward()
 
         time.sleep(1)
         self.DISABLED = []
@@ -105,7 +107,9 @@ class Pipo():
 
         for i, M in enumerate(self.Motors):
             if i in self.DISABLED:
-                (self.Motors[i]).set_speed(0)
+                (self.Motors[i]).backward()
+            else:
+                (self.Motors[i]).forward()
 
         time.sleep(1)
         self.DISABLED = []
