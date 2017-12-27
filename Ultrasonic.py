@@ -46,7 +46,7 @@ class Ultrasonic:
         distance = elapsed * 34000
         distance = distance / 2
 
-        print ("front: " + str(distance))
+        #print ("front: " + str(distance))
 
         return round(distance)
 
@@ -79,20 +79,20 @@ class Ultrasonic:
         distance = elapsed * 34000
         distance = distance / 2
 
-        print ("back: " + str(distance))
+        #print ("back: " + str(distance))
 
         return round(distance)
 
     def get_speed_rate(self, mode):
 
-        print ("mode: " + str(mode))
+        #print ("mode: " + str(mode))
 
         if mode == True:
             distance = self.__front_distance()
         else:
             distance = self.__back_distance()
 
-        print ("distance: " + str(distance))
+        #print ("distance: " + str(distance))
 
         if distance <= self.MIN_DIST:
             return 0

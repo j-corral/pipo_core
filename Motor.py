@@ -30,7 +30,7 @@ class Motor:
 
     def forward(self):
         for pin, value in zip(self.pins, self.forward_conf):
-            print (self.name + " [FW] - enable pin : " + str(pin))
+            #print (self.name + " [FW] - enable pin : " + str(pin))
             if pin == self.pwm_pin:
                 self.__init_pwm()
             else:
@@ -38,14 +38,14 @@ class Motor:
 
     def backward(self):
         for pin, value in zip(self.pins, self.backward_conf):
-            print (self.name + " [BW] - enable pin : " + str(pin))
+            #print (self.name + " [BW] - enable pin : " + str(pin))
             if pin == self.pwm_pin:
                 self.__init_pwm()
             GPIO.output(pin, value)
 
     def stop(self):
         for pin in self.pins:
-            print (self.name + " [STOP] - disable pin : " + str(pin))
+            #print (self.name + " [STOP] - disable pin : " + str(pin))
             GPIO.output(pin, 0)
 
     def __init_pwm(self):
@@ -61,5 +61,5 @@ class Motor:
          elif speed < self.MIN_PWM:
              speed = self.MIN_PWM
          
-         print (self.name + " - speed:" + str(speed))
+         #print (self.name + " - speed:" + str(speed))
          self.pwm.ChangeDutyCycle(speed)
