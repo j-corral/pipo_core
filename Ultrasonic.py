@@ -51,7 +51,7 @@ class Ultrasonic:
         return round(distance)
 
     def __back_distance(self):
-        self.MIN_DIST = 10
+        self.MIN_DIST = 15
         # use pin numbers
         GPIO.setmode(GPIO.BOARD)
 

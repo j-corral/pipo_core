@@ -12,8 +12,8 @@ class Pipo:
     Sensors = None
 
     SPEED_RATE = 1
-    TURN_SPEED = 10
-    TURN_SLEEP = 0.15
+    TURN_SPEED = 5
+    TURN_SLEEP = 0.25
 
     SPEED_STEPS = 10
     SPEED_SLEEP = 0.1
@@ -58,11 +58,14 @@ class Pipo:
         )
 
     def forward(self, auto=False):
+
+        auto = bool(int(auto))
+
         print("Going forward...")
         self.CURRENT_POS = self.POS_FORWARD
         for i, M in enumerate(self.Motors):
             (self.Motors[i]).forward()
-        if int(auto) > 0:
+        if bool(auto):
             print ("Auto drive: Enabled")
             self.__accelerate(True)
         else:
@@ -70,11 +73,12 @@ class Pipo:
             self.__accelerate(False)
 
     def backward(self, auto=False):
+        auto = bool(int(auto))
         print("Going backward...")
         self.CURRENT_POS = self.POS_BACKWARD
         for i, M in enumerate(self.Motors):
             (self.Motors[i]).backward()
-        if int(auto) > 0:
+        if bool(auto):
             print ("Auto drive: Enabled")
             self.__accelerate(True)
         else:
@@ -96,12 +100,13 @@ class Pipo:
         else:
             self.stop()
 
-    def left(self):
+    def left(self, auto=False):
         print ("Turning left...")
-        self.DISABLED = [1, 3]
+        #self.DISABLED = [1, 3]
+        self.__turnMode(auto, False)
 
-        if self.CURRENT_POS == self.POS_BACKWARD:
-            self.DISABLED = [0, 2]
+        #if self.CURRENT_POS == self.POS_BACKWARD:
+        #    self.DISABLED = [0, 2]
 
         for i, M in enumerate(self.Motors):
             if i in self.DISABLED:
@@ -111,16 +116,17 @@ class Pipo:
             print ("Turn speed: " + str(self.TURN_SPEED))
             (self.Motors[i]).set_speed(self.TURN_SPEED)
 
-        time.sleep(1)
+        time.sleep(self.TURN_SLEEP)
         self.DISABLED = []
 
-    def right(self):
+    def right(self, auto=False):
         print ("Turning right...")
-        self.SPEED_RATE = 10
-        self.DISABLED = [0, 2]
+        #self.DISABLED = [0, 2]
+        self.__turnMode(auto, True)
 
-        if self.CURRENT_POS == self.POS_BACKWARD:
-            self.DISABLED = [1, 4]
+
+        #if self.CURRENT_POS == self.POS_BACKWARD:
+        #    self.DISABLED = [1, 4]
 
         for i, M in enumerate(self.Motors):
             if i in self.DISABLED:
@@ -130,23 +136,43 @@ class Pipo:
             print ("Turn speed: " + str(self.TURN_SPEED))
             (self.Motors[i]).set_speed(self.TURN_SPEED)
 
-        time.sleep(1)
+        time.sleep(self.TURN_SLEEP)
         self.DISABLED = []
 
-    def __accelerate(self,mode=False):
+    def __turnMode(self, auto=False, direction=False):
+        if auto:
+            print ("Turn: auto mode")
+            self.TURN_SPEED = 10
+            self.TURN_SLEEP = 0.5
 
+        else:
+            print ("Turn: manual mode")
+            self.TURN_SPEED = 7
+            self.TURN_SLEEP = 0.1
+
+        # if turn right
+        if direction:
+            # 0: ARD - 1: - ARG - 2: AVD - 3: AVG
+            self.DISABLED = [0, 2]
+        else:
+            self.DISABLED = [1, 3]
+
+    def __accelerate(self,auto=False):
+
+        print ("accelerating...")
         step = 0
 
-        if mode:
+        if auto:
             while 1:
-                adapt = self.__adapt_speed(mode)
+                adapt = self.__adapt_speed(auto)
                 if not adapt:
                     break
         else:
             while step < self.SPEED_STEPS:
-                adapt = self.__adapt_speed(mode)
+                adapt = self.__adapt_speed(auto)
                 if not adapt:
                     break
+            #self.SPEED_STEPS = 0
 
     def __adapt_speed(self, auto=False):
         time.sleep(self.SPEED_SLEEP)
@@ -161,6 +187,7 @@ class Pipo:
         self.SPEED_RATE = self.SPEED_RATE + 1;
 
         if auto:
+            print ("auto adapt")
             if self.SPEED_RATE > self.TARGET_SPEED:
                 self.SPEED_RATE = self.TARGET_SPEED
 
@@ -169,14 +196,14 @@ class Pipo:
             if self.TARGET_SPEED <= 1:
                 self.__reverse(auto)
             elif self.TARGET_SPEED <= 3:
-                self.left()
-                time.sleep(self.TURN_SLEEP)
-                # self.__accelerate(auto)
+                self.left(auto)
                 self.forward(auto)
 
         else:
+            print ("manual adapt")
             # print ("Speed: " + str(self.TARGET_SPEED))
             if self.TARGET_SPEED <= 3:
+                # self.__reverse()
                 self.stop()
                 return False
 
@@ -190,44 +217,3 @@ class Pipo:
                 (self.Motors[i]).set_speed(self.SPEED_RATE)
 
         return True
-
-"""
-    def __adapt_speed(self):
-        while 1:
-            time.sleep(self.SPEED_SLEEP)
-
-            if self.CURRENT_POS == self.POS_FORWARD:
-                self.TARGET_SPEED = self.Sensors.get_speed_rate(True)
-            elif self.CURRENT_POS == self.POS_BACKWARD:
-                self.TARGET_SPEED = self.Sensors.get_speed_rate(False)
-            else:
-                break
-
-            self.SPEED_RATE = self.SPEED_RATE + 1;
-
-            if self.SPEED_RATE > self.TARGET_SPEED:
-                self.SPEED_RATE = self.TARGET_SPEED
-
-            print("Speed: " + str(self.SPEED_RATE))
-
-            if self.TARGET_SPEED < 2:
-                print("Stop pipo: " + str(self.SPEED_RATE))
-                self.stop()
-                break
-            #elif self.TARGET_SPEED <= 4:
-            #    print("turn left")
-            #    self.left()
-            #
-            #    self.TARGET_SPEED = 0;
-            #    self.SPEED_RATE = 0;
-            #    if self.CURRENT_POS == self.POS_FORWARD:
-            #        print("go backward")
-            #        self.backward()
-            #    else:
-            #        print("go forward")
-            #        self.forward()
-            #
-            for i, M in enumerate(self.Motors):
-                if i not in self.DISABLED:
-                    (self.Motors[i]).set_speed(self.SPEED_RATE)
-"""
