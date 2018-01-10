@@ -166,9 +166,9 @@ class Pipo:
 
             if self.TARGET_SPEED == 0:
                 self.stop()
-            if self.TARGET_SPEED <= 1:
+            if self.TARGET_SPEED <= 2:
                 self.__reverse(auto)
-            elif self.TARGET_SPEED <= 3:
+            elif self.TARGET_SPEED <= 4:
                 self.left()
                 time.sleep(self.TURN_SLEEP)
                 # self.__accelerate(auto)
