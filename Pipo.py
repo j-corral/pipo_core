@@ -12,8 +12,8 @@ class Pipo:
     Sensors = None
 
     SPEED_RATE = 1
-    TURN_SPEED = 10
-    TURN_SLEEP = 0.15
+    TURN_SPEED = 5
+    TURN_SLEEP = 0.25
 
     SPEED_STEPS = 10
     SPEED_SLEEP = 0.1
